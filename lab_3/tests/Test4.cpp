@@ -1,4 +1,4 @@
-//Тестирование работы потока Worker :
+//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЂР°Р±РѕС‚С‹ РїРѕС‚РѕРєР° Worker :
 
 TEST(WorkerTest, ChangingArray) {
     CRITICAL_SECTION cs;
@@ -10,11 +10,11 @@ TEST(WorkerTest, ChangingArray) {
         array[i] = array_data[i];
     }
     HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, threadWorker, array, 0, NULL);
-    // Ожидаем, пока поток Worker завершит работу
+    // РћР¶РёРґР°РµРј, РїРѕРєР° РїРѕС‚РѕРє Worker Р·Р°РІРµСЂС€РёС‚ СЂР°Р±РѕС‚Сѓ
     while (!started) {
         Sleep(100);
     }
-    // Проверяем, что массив был изменен правильно
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РјР°СЃСЃРёРІ Р±С‹Р» РёР·РјРµРЅРµРЅ РїСЂР°РІРёР»СЊРЅРѕ
     EXPECT_EQ(array[1][0], 2);
     EXPECT_EQ(array[1][1], 4);
     EXPECT_EQ(array[1][2], 2);
