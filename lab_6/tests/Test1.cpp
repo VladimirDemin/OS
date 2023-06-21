@@ -1,15 +1,13 @@
-//Тестирование работы критической секции :
+//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЂР°Р±РѕС‚С‹ РјСЊСЋС‚РµРєСЃР°:
 
-TEST(CriticalSectionTest, EnterAndLeave) {
-    CRITICAL_SECTION cs;
-    InitializeCriticalSection(&cs);
-    // Входим в критическую секцию
-    EnterCriticalSection(&cs);
-    // Проверяем, что мы внутри критической секции
-    EXPECT_TRUE(TryEnterCriticalSection(&cs) == 0);
-    // Выходим из критической секции
-    LeaveCriticalSection(&cs);
-    // Проверяем, что мы вышли из критической секции
-    EXPECT_TRUE(TryEnterCriticalSection(&cs) != 0);
-    DeleteCriticalSection(&cs);
+TEST(MutexTest, LockAndUnlock) {
+    mutex mtx;
+    // Р‘Р»РѕРєРёСЂСѓРµРј РјСЊСЋС‚РµРєСЃ
+    mtx.lock();
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РґСЂСѓРіРѕР№ РїРѕС‚РѕРє РЅРµ РјРѕР¶РµС‚ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ РјСЊСЋС‚РµРєСЃ
+    EXPECT_TRUE(mtx.try_lock() == false);
+    // Р Р°Р·Р±Р»РѕРєРёСЂСѓРµРј РјСЊСЋС‚РµРєСЃ
+    mtx.unlock();
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РјСЊСЋС‚РµРєСЃ СЂР°Р·Р±Р»РѕРєРёСЂРѕРІР°РЅ
+    EXPECT_TRUE(mtx.try_lock() == true);
 }
