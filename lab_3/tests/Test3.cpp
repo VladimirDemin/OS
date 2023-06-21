@@ -1,4 +1,4 @@
-//Тестирование работы потока CountElement :
+//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЂР°Р±РѕС‚С‹ РїРѕС‚РѕРєР° CountElement :
 
 TEST(CountElementTest, CountingElements) {
     CRITICAL_SECTION cs;
@@ -10,9 +10,9 @@ TEST(CountElementTest, CountingElements) {
         array[i] = array_data[i];
     }
     HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, threadCountElement, array, 0, NULL);
-    // Ожидаем, пока поток CountElement завершит работу
+    // РћР¶РёРґР°РµРј, РїРѕРєР° РїРѕС‚РѕРє CountElement Р·Р°РІРµСЂС€РёС‚ СЂР°Р±РѕС‚Сѓ
     WaitForSingleObject(hEvent, INFINITE);
-    // Проверяем, что количество элементов было посчитано правильно
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ Р±С‹Р»Рѕ РїРѕСЃС‡РёС‚Р°РЅРѕ РїСЂР°РІРёР»СЊРЅРѕ
     EXPECT_EQ(array[0][2], 2);
     CloseHandle(hThread);
     CloseHandle(hEvent);
