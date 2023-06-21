@@ -1,4 +1,4 @@
-//Тестирование записи чисел в буфер и оповещения Reader в Writer :
+//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ Р·Р°РїРёСЃРё С‡РёСЃРµР» РІ Р±СѓС„РµСЂ Рё РѕРїРѕРІРµС‰РµРЅРёСЏ Reader РІ Writer :
 
 TEST(WriterTest, BufferWritingAndNotification) {
     Writer writer;
@@ -7,12 +7,12 @@ TEST(WriterTest, BufferWritingAndNotification) {
     std::mutex mutex;
     std::condition_variable cv;
 
-    // Записываем число в буфер и оповещаем Reader
+    // Р—Р°РїРёСЃС‹РІР°РµРј С‡РёСЃР»Рѕ РІ Р±СѓС„РµСЂ Рё РѕРїРѕРІРµС‰Р°РµРј Reader
     writer.writeToBuffer(buffer, 5, mutex, cv);
-    // Ожидаем, пока Reader прочитает число
+    // РћР¶РёРґР°РµРј, РїРѕРєР° Reader РїСЂРѕС‡РёС‚Р°РµС‚ С‡РёСЃР»Рѕ
     std::unique_lock<std::mutex> lock(mutex);
     cv.wait(lock);
-    // Проверяем, что буфер пуст и Reader прочитал число
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ Р±СѓС„РµСЂ РїСѓСЃС‚ Рё Reader РїСЂРѕС‡РёС‚Р°Р» С‡РёСЃР»Рѕ
     EXPECT_TRUE(buffer.empty());
     EXPECT_EQ(reader.getLastReadNumber(), 5);
 }
