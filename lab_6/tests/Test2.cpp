@@ -1,16 +1,23 @@
-//Тестирование работы события :
+//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЂР°Р±РѕС‚С‹ СѓСЃР»РѕРІРЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№:
 
-TEST(EventTest, SetAndReset) {
-    HANDLE hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-    // Проверяем, что событие не поднято
-    EXPECT_TRUE(WaitForSingleObject(hEvent, 0) == WAIT_TIMEOUT);
-    // Поднимаем событие
-    SetEvent(hEvent);
-    // Проверяем, что событие поднято
-    EXPECT_TRUE(WaitForSingleObject(hEvent, 0) == WAIT_OBJECT_0);
-    // Сбрасываем событие
-    ResetEvent(hEvent);
-    // Проверяем, что событие не поднято
-    EXPECT_TRUE(WaitForSingleObject(hEvent, 0) == WAIT_TIMEOUT);
-    CloseHandle(hEvent);
+TEST(ConditionVariableTest, WaitAndNotify) {
+    mutex mtx;
+    condition_variable_any cv;
+    bool flag = false;
+
+    thread t([&]() {
+        unique_lock<mutex> lock(mtx);
+        // Р—Р°РґРµСЂР¶РєР° РїРѕС‚РѕРєР° РЅР° 1 СЃРµРєСѓРЅРґСѓ
+        this_thread::sleep_for(chrono::seconds(1));
+        flag = true;
+        // РЈРІРµРґРѕРјР»РµРЅРёРµ РѕР¶РёРґР°СЋС‰РµРіРѕ РїРѕС‚РѕРєР°
+        cv.notify_one();
+    });
+
+    unique_lock<mutex> lock(mtx);
+    // РћР¶РёРґР°РЅРёРµ СѓРІРµРґРѕРјР»РµРЅРёСЏ РѕС‚ РґСЂСѓРіРѕРіРѕ РїРѕС‚РѕРєР°
+    cv.wait(lock, [&]() {return flag; });
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ С„Р»Р°Рі СѓСЃС‚Р°РЅРѕРІР»РµРЅ РІ true
+    EXPECT_TRUE(flag == true);
+    t.join();
 }
