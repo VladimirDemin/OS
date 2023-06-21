@@ -1,21 +1,26 @@
-//Тестирование работы потока CountElement :
+//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЂР°Р±РѕС‚С‹ РїРѕС‚РѕРєР° CountElement:
 
 TEST(CountElementTest, CountingElements) {
-    CRITICAL_SECTION cs;
-    InitializeCriticalSection(&cs);
-    HANDLE hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-    short array_data[3][5] = { {5, 2, 0}, {2, 4, 2, 1, 2}, {0} };
-    short** array = new short* [3];
-    for (int i = 0; i < 3; i++) {
+    short array_data[5] = { 5, 2, 0, 2, 4 };
+    short* array = new short[5];
+    for (int i = 0; i < 5; i++) {
         array[i] = array_data[i];
     }
-    HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, threadCountElement, array, 0, NULL);
-    // Ожидаем, пока поток CountElement завершит работу
-    WaitForSingleObject(hEvent, INFINITE);
-    // Проверяем, что количество элементов было посчитано правильно
-    EXPECT_EQ(array[0][2], 2);
-    CloseHandle(hThread);
-    CloseHandle(hEvent);
-    DeleteCriticalSection(&cs);
+    short** temp_array = new short* [2];
+    temp_array[0] = new short[3];
+    temp_array[0][0] = 5;
+    temp_array[0][1] = 2;
+    temp_array[0][2] = 0;
+    temp_array[1] = array;
+
+    thread t(threadCountElement, temp_array);
+    t.join();
+
+    // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ Р±С‹Р»Рѕ РїРѕСЃС‡РёС‚Р°РЅРѕ РїСЂР°РІРёР»СЊРЅРѕ
+    EXPECT_EQ(temp_array[0][2], 2);
+
     delete[] array;
+    delete[] temp_array[0];
+    delete[] temp_array[1];
+    delete[] temp_array;
 }
